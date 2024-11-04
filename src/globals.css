@@ -78,6 +78,18 @@ body{
     flex-direction: column;
 }
 
+form:has(input:focus){
+    outline: 2px solid var(--primary-button-color)
+}
+
+form:has(input:focus) input{
+    caret-color: var(--primary-button-color);
+}
+
+input{
+    font-family: inherit;
+}
+
 .loader{
     width:100%;
     height:5rem;
@@ -128,6 +140,12 @@ body{
     border: 1px solid var(--primary-button-border-color);
     color: #fff;
     font-weight: 600;
+}
+
+.page-heading{
+    color: var(--main-heading-color);
+    margin: 2rem auto;
+    text-align: center;
 }
 
 header{

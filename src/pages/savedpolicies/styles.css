@@ -1,7 +1,5 @@
-.policy-body .heading{
-    color: var(--main-heading-color);
-    margin: 2rem auto;
-    text-align: center;
+.policy-body{
+    flex:1;
 }
 
 .policy-body .saved-policies-container{
