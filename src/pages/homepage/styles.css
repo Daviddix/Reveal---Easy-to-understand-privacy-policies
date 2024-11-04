@@ -1,0 +1,320 @@
+header{
+    background-color: var(--l1-elevation);
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    position: relative;
+}
+
+header > button{
+    background-color: transparent;
+    border: none;
+}
+
+header > button img{
+    width: 3rem;
+}
+
+header nav{
+    position: absolute;
+    height: 100vh;
+    width:100%;
+    left:0;
+    top:0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    --menu-padding : 6rem;
+    display: none;
+}
+
+nav .menu{
+    padding-top: var(--menu-padding);
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.menu .top{
+    flex:1;
+}
+
+.top .logo-container{
+    display: flex;
+    align-items: center;
+    column-gap: 1rem;
+    margin: 0 0 2rem 0;
+}
+
+.logo-container img{
+    width:5rem;
+}
+
+.logo-container h1{
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--main-heading-color);
+}
+
+.top .menu-options{ 
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+}
+
+.menu-options > button{
+    height: 4rem;
+    border: none;
+    color: var(--main-text-color); 
+    background-color: var(--l1-elevation);
+    border-radius: .8rem;
+    -webkit-border-radius: .8rem;
+    -moz-border-radius: .8rem;
+    -ms-border-radius: .8rem;
+    -o-border-radius: .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding-inline: 1rem;
+    column-gap: .5rem;
+    font-weight: 600;
+    font-size: 1.6rem;
+}
+
+.menu-options > button img{
+    width:2rem;
+}
+
+.menu-options button.active{
+    color: #fff;
+    background-color: var(--primary-button-color);
+    border:1px solid var(--primary-button-border-color);
+}
+
+nav .overlay{
+    background-color: rgba(0, 0, 0, 0.884);
+    padding-top: var(--menu-padding);
+}
+
+.overlay > button{
+    display: block;
+    border: none;
+    margin: 0 0 0 auto;
+}
+
+.overlay img[alt="close icon"]{
+    width: 3.8rem;
+}
+
+.menu .menu-footer{
+    background-color: var(--l1-elevation);
+    height:5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.menu-footer .support-container{
+    display :flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border: none;
+}
+
+.support-container > h2{
+    font-size: 1.6rem;
+    background-image: linear-gradient(to right, var(--main-text-color), var(--sub-heading-color));
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.support-container > img{
+    width:1rem;
+    margin: .2rem 0 0 .2rem;
+}
+
+.menu-footer button{
+    border: none;
+}
+
+.menu-footer .theme-switch img{
+    width:2rem;
+}
+
+.chat-body{
+    background: var(--bg-gradient);
+    background-size: 100vw;
+    padding: 1rem 0;
+    flex: 1;
+    max-height: 100%;
+    overflow-y : scroll;
+}
+
+.chat-body :is(.user-message, .reveal-ai-message){
+    display:flex;
+    column-gap: 1rem;
+    align-items: start;
+    justify-content: space-between;
+    margin: 0 0 2rem 0;
+}
+
+.chat-body :is(.user-bubble, .reveal-ai-bubble){
+    flex: 1;
+    background-color: var(--l1-elevation);
+    padding: .8rem;
+    border: 1px solid var(--border-color);
+    border-radius:1rem;
+    -moz-border-radius:1rem;
+    -ms-border-radius:1rem;
+    -o-border-radius:1rem;
+    -webkit-border-radius:1rem;
+    overflow: hidden;
+}
+
+.user-bubble p{
+    color: var(--main-text-color);
+    font-size: 1.4rem;
+}
+
+.chat-body .reveal-ai-bubble{
+    padding:0;
+}
+
+.reveal-ai-bubble :is(.summaries-container, .reveal-bubble-header, .reveal-bubble-footer),
+.modal :is(.modal-header, .modal-options)
+{
+    padding: .8rem;
+}
+
+.reveal-ai-message .reveal-icon{
+    max-width: 2rem;
+}
+
+.reveal-ai-bubble :is(.reveal-bubble-header, .reveal-bubble-footer),
+.modal .modal-header
+{
+    background-color: var(--bg-color);
+}
+
+.reveal-bubble-header h1,
+.modal .modal-header h1
+{
+    font-size: 1.2rem;
+    color: var(--sub-heading-color);
+}
+
+.reveal-ai-bubble .summaries-container{
+    display: flex; 
+    flex-direction: column;
+    background-color: var(--first-elevation);
+    row-gap: 1rem;
+}
+
+.summaries-container .single-summary{
+    padding: 0 0 1rem 0;
+}
+
+.summaries-container .single-summary:not(:last-of-type){
+    border-bottom: 1px solid var(--path-color);
+}
+
+.single-summary > h1{
+    color: var(--main-heading-color);
+    font-size: 1.6rem;
+}
+
+.single-summary > p{
+    color: var(--sub-text-color);
+    font-weight: 100;
+    font-size: 1.4rem;
+    max-width: 95%;
+    margin: 0 0 .5rem 0;
+}
+
+.single-summary > button{
+    display: block;
+    margin: 0 0 0 auto;
+}
+
+.reveal-ai-bubble .reveal-bubble-footer > button{
+    border:none;
+    background-color: transparent;
+    display:flex;
+    margin: 0 0 0 auto;
+    column-gap: .3rem;
+    align-items: center;
+
+    img{
+        width: 1.5rem;
+    }
+    
+    h3{
+        font-weight: 600;
+        color: var(--sub-heading-color);
+        font-size: 1.2rem;
+    }
+}
+
+.options .modal{
+    width: 18rem;
+    margin: 0 0 .5rem;
+    border-radius:1rem;
+    -moz-border-radius:1rem;
+    -ms-border-radius:1rem;
+    -o-border-radius:1rem;
+    -webkit-border-radius:1rem;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    background-color : var(--l1-elevation);
+}
+
+.modal .modal-options{
+    display: flex;
+    flex-direction: column;
+    row-gap: .8rem;
+}
+
+.modal-options > button{
+    border: none;
+    text-align: left;
+    color: var(--sub-text-color);
+    font-weight: 500;
+}
+
+.input-section form{
+    display: flex;
+    padding-block: .5rem;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 1rem;
+}
+
+.input-section textarea{
+    flex: 1;
+    border: 1px solid var(--border-button-color);
+    height: 5rem;
+    border-radius: .8rem;
+    -webkit-border-radius: .8rem;
+    -moz-border-radius: .8rem;
+    -ms-border-radius: .8rem;
+    -o-border-radius: .8rem;
+    font-family: inherit;
+    background-color: var(--l1-elevation);
+}
+
+.input-section .primary{
+    align-self: stretch;
+    padding: .5rem;
+    border-radius: 1rem;
+    -webkit-border-radius: 1rem;
+    -moz-border-radius: 1rem;
+    -ms-border-radius: 1rem;
+    -o-border-radius: 1rem;
+    width: 15rem;
+}
+
+.input-section textarea::placeholder{
+    padding: 1.5rem 1rem;
+    font-weight: 500;
+}
