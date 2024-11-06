@@ -170,12 +170,20 @@ header nav{
     position: absolute;
     height: 100vh;
     width:100%;
-    left:0;
+    left:-200vw;
     top:0;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    --menu-padding : 6rem;
-    display: none;
+    --menu-padding: 6rem;
+    transition:left 1s ease-in-out;
+    -webkit-transition:left 1s ease-in-out;
+    -moz-transition:left 1s ease-in-out;
+    -ms-transition:left 1s ease-in-out;
+    -o-transition:left 1s ease-in-out;
+}
+
+header nav.open{
+    left:0;
 }
 
 nav .menu{
@@ -183,6 +191,8 @@ nav .menu{
     background-color: var(--bg-color);
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 2;
 }
 
 .gradient-glow-bg{
@@ -249,6 +259,17 @@ nav .menu{
 nav .overlay{
     background-color: rgba(0, 0, 0, 0.884);
     padding-top: var(--menu-padding);
+    position: relative;
+    transition:left 1s ease-in-out .2s;
+    left:-12rem;
+    -webkit-transition:left 1s ease-in-out .2s;
+    -moz-transition:left 1s ease-in-out .2s;
+    -ms-transition:left 1s ease-in-out .2s;
+    -o-transition:left 1s ease-in-out .2s;
+}
+
+nav.open .overlay{
+    left: 0;
 }
 
 .overlay > button{
