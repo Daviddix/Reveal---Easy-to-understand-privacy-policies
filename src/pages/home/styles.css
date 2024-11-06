@@ -11,6 +11,13 @@
     align-items: start;
     justify-content: space-between;
     margin: 0 0 2rem 0;
+    animation: up .2s ease-in;
+    -webkit-animation:forwards up .5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -o-transform: translateY(10px);
 }
 
 .chat-body :is(.user-bubble, .reveal-ai-bubble){
@@ -155,6 +162,8 @@
     -o-border-radius: .8rem;
     font-family: inherit;
     background-color: var(--l1-elevation);
+    padding: 1rem;
+    resize: none;
 }
 
 .input-section .primary{
@@ -169,6 +178,62 @@
 }
 
 .input-section textarea::placeholder{
-    padding: 1.5rem 1rem;
+    padding: .6rem .5rem;
     font-weight: 500;
+}
+
+@keyframes up {
+    to{
+        transform: translateY(0);
+        -webkit-transform: translateY(0);
+        -moz-transform: translateY(0);
+        -ms-transform: translateY(0);
+        -o-transform: translateY(0);
+}
+}
+
+.reveal-ai-skeleton{
+    display:flex;
+    column-gap: 1rem;
+    align-items: start;
+    justify-content: space-between;
+    margin: 0 0 2rem 0;
+    animation: up .6s ease-in forwards;
+    -webkit-animation: up .6s ease-in forwards;
+    transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -o-transform: translateY(10px);
+}
+
+.reveal-ai-skeleton .skeleton-image{
+    width:3rem;
+    aspect-ratio: 1/1;
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite ;
+    -webkit-animation: loading 1s infinite ;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    background-image: var(--loader-bg);
+}
+
+.reveal-ai-skeleton .skeleton-response{
+    flex: 1;
+    padding: .8rem;
+    border: 1px solid var(--border-color);
+    border-radius:1rem;
+    -moz-border-radius:1rem;
+    -ms-border-radius:1rem;
+    -o-border-radius:1rem;
+    -webkit-border-radius:1rem;
+    overflow: hidden;
+    background-image: var(--loader-bg);
+    height:30rem;
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite ;
+    -webkit-animation: loading 1.5s infinite ;
 }

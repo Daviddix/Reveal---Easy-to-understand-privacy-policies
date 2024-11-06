@@ -2,10 +2,11 @@
     --success-color : #268244;
     --error-color: #C43D3D;
 
+    --loader-darker: hsl(213, 100%, 97%);
     --loader-bg : linear-gradient(90deg,
-    var(--l2-elevation) 25%,
+    var(--loader-darker) 25%,
     var(--l1-elevation) 50%,
-    var(--l2-elevation) 75%);
+    var(--loader-darker) 75%);
 }
 
 :root {
@@ -65,6 +66,12 @@
 html{
     font-size: 62.5%;
     background-color: var(--bg-color);
+    caret-color: var(--primary-button-color);
+}
+
+*::selection{
+    background-color: var(--primary-button-color);
+    color: #fff;
 }
 
 body{
@@ -111,12 +118,12 @@ input{
     100% {
       background-position: -200% 0;
     }
-  }
+}
 
-  button{
+button{
     cursor: pointer;
     background-color: transparent;
-  }
+}
 
 .wrapper{
     padding-inline: 2rem;
