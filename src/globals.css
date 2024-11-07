@@ -89,7 +89,7 @@ form:has(input:focus){
     outline: 2px solid var(--primary-button-color)
 }
 
-form:has(input:focus) input{
+input:focus{
     caret-color: var(--primary-button-color);
 }
 
@@ -177,7 +177,7 @@ header nav{
     position: absolute;
     height: 100vh;
     width:100%;
-    left:-200vw;
+    left:-100vw;
     top:0;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -273,6 +273,7 @@ nav .overlay{
     -moz-transition:left 1s ease-in-out .2s;
     -ms-transition:left 1s ease-in-out .2s;
     -o-transition:left 1s ease-in-out .2s;
+    z-index:1;
 }
 
 nav.open .overlay{
