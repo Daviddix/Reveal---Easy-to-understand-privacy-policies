@@ -3,7 +3,16 @@ const policyTextarea = document.querySelector(".policy-textarea")
 const allMessages = []
 const chatBody = document.querySelector(".chat-body")
 const baseUrl = "http://localhost:3000"
+const summaryOptionsToggle = document.querySelector(".active-option")
+const optionsModal = document.querySelector(".modal")
+const optionsButtons = document.querySelectorAll(".modal-options > button")
+const generateSummaryButton = document.querySelector(".policy-form .primary")
+let policySource = summaryOptionsToggle.innerText
 
+//initial function
+init(policySource)
+
+//eventListeners
 policyForm.addEventListener("submit", (e)=>{
     e.preventDefault()
     const pastedValue = policyTextarea.value.trim()
@@ -18,7 +27,7 @@ policyForm.addEventListener("submit", (e)=>{
     const aiMessageAsObj = {
         id : Date.now(),
         from : "ai",
-        status : "loading",
+        source : policySource,
         value : userMessageAsObj.value
     }
 
@@ -28,11 +37,26 @@ policyForm.addEventListener("submit", (e)=>{
     policyTextarea.value = ""
 })
 
-function renderDiv({from , value, status}){
+summaryOptionsToggle.addEventListener("click", (e)=>{
+    optionsModal.classList.toggle("open")
+})
+
+optionsButtons.forEach((button)=>{
+    button.addEventListener("click", (e)=>{
+        policySource = e.currentTarget.innerHTML
+        updatePolicySourceUi(policySource)
+        updateTextareaUI(policySource)
+        optionsModal.classList.remove("open")
+    })
+})
+
+
+//functions
+function renderDiv({from , value, source}){
     if(from == "user"){
         renderNewUserMessage(value)
     }else if(from == "ai"){
-        renderNewAiMessage(value)
+        startAiMessageProcessing(value, source)
     }else{
         alert("wrong type passed")
     }
@@ -49,9 +73,10 @@ function renderNewUserMessage(value){
     chatBody.appendChild(userDiv)
 }
 
-async function renderNewAiMessage(value){
+async function startAiMessageProcessing(value, source){
     const skeletonDiv = renderAiMessageSkeleton()
     try{
+        console.log(source)
         const rawFetch = await fetch(`${baseUrl}/api/summary`, {
             method : "POST",
             body : JSON.stringify({
@@ -69,11 +94,12 @@ async function renderNewAiMessage(value){
         }
 
         skeletonDiv.remove()
-        renderAiMessage(responseInJson)
+        renderAiSummary(responseInJson, source)
         console.log(responseInJson) 
     }
     catch(err){
-        alert("an error ocurred")
+        skeletonDiv.remove()
+        renderErrorUi(value, source)
         console.error(err)
     }
 }
@@ -94,21 +120,50 @@ function renderAiMessageSkeleton(){
     return skeletonDiv
 }
 
-function renderAiMessage(summaryObj){
+function renderErrorUi(value, source){
+    const errorDiv = document.createElement("div")
+    errorDiv.className = "reveal-ai-error-bubble"
+    const button = document.createElement("button")
+    button.addEventListener("click", ()=>{
+        errorDiv.remove()
+        startAiMessageProcessing(value, source)
+    })
+    button.textContent = "Retry"
+    errorDiv.innerHTML = `
+            <p>Oops, seems like an error ocurred when we tried to generate your policy summary, please try again</p>`
+    errorDiv.appendChild(button)
+    chatBody.appendChild(errorDiv)
+}
+
+function renderAiSummary(summaryObj, source){
     const  messageDiv = document.createElement("div")
     messageDiv.className = "reveal-ai-message"
-    const summaryTitle = `Privacy Policy Summary from ${summaryObj.title}`
+    const summaryTitle = `Privacy Policy Summary for ${summaryObj.title}`
     let allSingleSummary =  ``
 
-    summaryObj.summary.forEach((summary)=>{
-        allSingleSummary += `<div class="single-summary">
-                        <h1>${summary.title}</h1>
+    if(source == "Extract From Page"){
+        summaryObj.summary.forEach((summary)=>{
+            allSingleSummary += `<div class="single-summary">
+                            <h1>${summary.title}</h1>
+        
+                            <p>${summary.description}</p>
+        
+                            <button class="secondary-button">View on page</button>
+                        </div>`
+        })
+    }else if(source == "Paste Manually"){
+        summaryObj.summary.forEach((summary)=>{
+            allSingleSummary += `<div class="single-summary">
+                            <h1>${summary.title}</h1>
+        
+                            <p>${summary.description}</p>
     
-                        <p>${summary.description}</p>
+                        </div>`
+        })
+    }else{
+        alert("Wrong type passed")
+    }
     
-                        <button class="secondary-button">View on page</button>
-                    </div>`
-    })
 
     messageDiv.innerHTML = ` <img src="../../assets/images/reveal-chat-icon-light.png" alt="reveal chat icon" class="reveal-icon">
 
@@ -129,4 +184,24 @@ function renderAiMessage(summaryObj){
         inline : "nearest",
         behavior : "smooth"
     })
+}
+
+function updatePolicySourceUi(value){
+    summaryOptionsToggle.innerHTML = `${value} <img src="../../assets/icons/view-more-light.svg" alt="view more">`
+}
+
+function updateTextareaUI(value){
+    if(value == "Extract From Page"){
+        policyTextarea.setAttribute("disabled", true)
+        generateSummaryButton.innerText = "Generate From Page"
+    }else if(value == "Paste Manually"){
+        policyTextarea.removeAttribute("disabled")
+        generateSummaryButton.innerText = "Generate Summary"
+    }else{
+        alert("Wrong type passed")
+    }
+}
+
+function init(initialValue){
+    updateTextareaUI(initialValue)
 }
