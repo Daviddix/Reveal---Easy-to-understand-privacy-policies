@@ -22,5 +22,21 @@
     ],
     "side_panel" : {
         "default_path" : "./src/pages/home/index.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js" : ["./src/content_scripts/content_scripts.js"]
+        }     
+    ],
+    "commands": {
+        "Ctrl+M": {
+            "suggested_key": {
+                "default": "Ctrl+M",
+                "mac": "Command+M"
+            },
+            "description": "Ctrl+M."
+        }
     }
+
 }

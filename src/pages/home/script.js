@@ -8,33 +8,63 @@ const optionsModal = document.querySelector(".modal")
 const optionsButtons = document.querySelectorAll(".modal-options > button")
 const generateSummaryButton = document.querySelector(".policy-form .primary")
 let policySource = summaryOptionsToggle.innerText
+const inputArea = document.querySelector(".input-section")
 
 //initial function
 init(policySource)
 
 //eventListeners
-policyForm.addEventListener("submit", (e)=>{
+policyForm.addEventListener("submit", async (e)=>{
     e.preventDefault()
     const pastedValue = policyTextarea.value.trim()
-    if(!pastedValue) return
+    if(policySource == "Extract From Page"){
+        const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true})
+        const response = await chrome.tabs.sendMessage(tab.id, {action: "getAllHTML"})
+        console.log(response.allHTML)
+        console.log(response.allHTML.html)
+        console.log(response.allHTML.text)
 
-    const userMessageAsObj = {
-        id : Date.now(),
-        from : "user",
-        value : pastedValue
+        const pageHTMLValue = response.allHTML.html
+        const pageHTMLValueAsText = response.allHTML.text
+
+        const userMessageAsObj = {
+            id : Date.now(),
+            from : "user",
+            value : pageHTMLValueAsText
+        }
+    
+        const aiMessageAsObj = {
+            id : Date.now(),
+            from : "ai",
+            source : policySource,
+            value : pageHTMLValue
+        }
+    
+        allMessages.push(userMessageAsObj, aiMessageAsObj)
+        renderDiv(userMessageAsObj)
+        renderDiv(aiMessageAsObj)
+        policyTextarea.value = ""
+    }else if(policySource == "Paste Manually"){
+        if(!pastedValue) return
+    
+        const userMessageAsObj = {
+            id : Date.now(),
+            from : "user",
+            value : pastedValue
+        }
+    
+        const aiMessageAsObj = {
+            id : Date.now(),
+            from : "ai",
+            source : policySource,
+            value : userMessageAsObj.value
+        }
+    
+        allMessages.push(userMessageAsObj, aiMessageAsObj)
+        renderDiv(userMessageAsObj)
+        renderDiv(aiMessageAsObj)
+        policyTextarea.value = ""
     }
-
-    const aiMessageAsObj = {
-        id : Date.now(),
-        from : "ai",
-        source : policySource,
-        value : userMessageAsObj.value
-    }
-
-    allMessages.push(userMessageAsObj, aiMessageAsObj)
-    renderDiv(userMessageAsObj)
-    renderDiv(aiMessageAsObj)
-    policyTextarea.value = ""
 })
 
 summaryOptionsToggle.addEventListener("click", (e)=>{
@@ -56,7 +86,11 @@ function renderDiv({from , value, source}){
     if(from == "user"){
         renderNewUserMessage(value)
     }else if(from == "ai"){
-        startAiMessageProcessing(value, source)
+        if(source == "Paste Manually"){
+            startAiMessageProcessingFromPaste(value)
+        }else if(source == "Extract From Page"){
+            startAiMessageProcessingFromPage(value)
+        }
     }else{
         alert("wrong type passed")
     }
@@ -73,7 +107,8 @@ function renderNewUserMessage(value){
     chatBody.appendChild(userDiv)
 }
 
-async function startAiMessageProcessing(value, source){
+async function startAiMessageProcessingFromPaste(value, source){
+    toggleInputState()
     const skeletonDiv = renderAiMessageSkeleton()
     try{
         console.log(source)
@@ -94,7 +129,40 @@ async function startAiMessageProcessing(value, source){
         }
 
         skeletonDiv.remove()
-        renderAiSummary(responseInJson, source)
+        toggleInputState()
+        renderAiSummaryFromPaste(responseInJson, source)
+        console.log(responseInJson) 
+    }
+    catch(err){
+        skeletonDiv.remove()
+        renderErrorUi(value, source)
+        console.error(err)
+    }
+}
+
+async function startAiMessageProcessingFromPage(value, source){
+    toggleInputState()
+    const skeletonDiv = renderAiMessageSkeleton()
+    try{
+        const rawFetch = await fetch(`${baseUrl}/api/summary/page`, {
+            method : "POST",
+            body : JSON.stringify({
+                privacyPolicy : value
+            }),
+            headers : {
+                "Content-Type" : "application/json"
+            }
+        })
+
+        const responseInJson = await rawFetch.json()
+
+        if(!rawFetch.ok){
+            throw new Error("an error ocurred", {cause : responseInJson})
+        }
+
+        skeletonDiv.remove()
+        toggleInputState()
+        renderAiSummaryFromPage(responseInJson)
         console.log(responseInJson) 
     }
     catch(err){
@@ -126,7 +194,11 @@ function renderErrorUi(value, source){
     const button = document.createElement("button")
     button.addEventListener("click", ()=>{
         errorDiv.remove()
-        startAiMessageProcessing(value, source)
+        if(source == "Paste Manually"){
+            startAiMessageProcessingFromPaste(value, source)
+        }else if(source == "Extract From Page"){
+            startAiMessageProcessingFromPage(value, source)
+        }
     })
     button.textContent = "Retry"
     errorDiv.innerHTML = `
@@ -135,14 +207,12 @@ function renderErrorUi(value, source){
     chatBody.appendChild(errorDiv)
 }
 
-function renderAiSummary(summaryObj, source){
+function renderAiSummaryFromPaste(summaryObj){
     const  messageDiv = document.createElement("div")
     messageDiv.className = "reveal-ai-message"
     const summaryTitle = `Privacy Policy Summary for ${summaryObj.title}`
     let allSingleSummary =  ``
 
-    if(source == "Extract From Page"){
-        summaryObj.summary.forEach((summary)=>{
             allSingleSummary += `<div class="single-summary">
                             <h1>${summary.title}</h1>
         
@@ -150,8 +220,7 @@ function renderAiSummary(summaryObj, source){
         
                             <button class="secondary-button">View on page</button>
                         </div>`
-        })
-    }else if(source == "Paste Manually"){
+
         summaryObj.summary.forEach((summary)=>{
             allSingleSummary += `<div class="single-summary">
                             <h1>${summary.title}</h1>
@@ -160,10 +229,6 @@ function renderAiSummary(summaryObj, source){
     
                         </div>`
         })
-    }else{
-        alert("Wrong type passed")
-    }
-    
 
     messageDiv.innerHTML = ` <img src="../../assets/images/reveal-chat-icon-light.png" alt="reveal chat icon" class="reveal-icon">
 
@@ -178,6 +243,46 @@ function renderAiSummary(summaryObj, source){
                     <button class="save-container"> <img src="../../assets/icons/save-icon-light.svg" alt="save icon"> <h3>Save</h3></button> 
                 </div>
     </div>`
+    chatBody.appendChild(messageDiv)
+    messageDiv.scrollIntoView({
+        block : "start",
+        inline : "nearest",
+        behavior : "smooth"
+    })
+}
+
+function renderAiSummaryFromPage(summaryObj){
+    const  messageDiv = document.createElement("div")
+    messageDiv.className = "reveal-ai-message"
+    const summaryTitle = `Privacy Policy Summary for ${summaryObj.title}`
+    let allSingleSummary =  ``
+
+    summaryObj.summary.forEach((summary)=>{
+            allSingleSummary += `<div class="single-summary">
+                            <h1>${summary.title}</h1>
+        
+                            <p>${summary.description}</p>
+        
+                            <button data-phrase="${summary.exactPhrase}" class="secondary-button">View on page</button>
+                        </div>`
+    })
+    
+
+    messageDiv.innerHTML = `<img src="../../assets/images/reveal-chat-icon-light.png" alt="reveal chat icon" class="reveal-icon">
+
+            <div class="reveal-ai-bubble">
+                <div class="reveal-bubble-header"> <h1>${summaryTitle}</h1></div>
+
+                <div class="summaries-container">
+                    ${allSingleSummary}
+                </div>
+
+                <div class="reveal-bubble-footer"> 
+                    <button class="save-container"> <img src="../../assets/icons/save-icon-light.svg" alt="save icon"> <h3>Save</h3></button> 
+                </div>
+    </div>`
+
+
     chatBody.appendChild(messageDiv)
     messageDiv.scrollIntoView({
         block : "start",
@@ -202,6 +307,10 @@ function updateTextareaUI(value){
     }
 }
 
-function init(initialValue){
+async function init(initialValue){
     updateTextareaUI(initialValue)
+}
+
+function toggleInputState(){
+    inputArea.classList.toggle("loading")
 }

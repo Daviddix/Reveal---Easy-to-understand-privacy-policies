@@ -42,6 +42,7 @@
 .chat-body .reveal-ai-error-bubble{
     background-image: linear-gradient(to bottom right, hsl(0, 73%, 98%), 90% ,var(--error-color));
     border:none;
+    margin: 0 0 2rem 0;
 }
 
 .chat-body .reveal-ai-error-bubble p{
@@ -245,6 +246,11 @@
     align-items: center;
     justify-content: space-between;
     column-gap: 1rem;
+}
+
+.input-section.loading{
+    opacity: .3;
+    pointer-events: none;
 }
 
 .input-section textarea{
