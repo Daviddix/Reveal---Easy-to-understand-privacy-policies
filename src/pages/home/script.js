@@ -266,7 +266,6 @@ function renderAiSummaryFromPage(summaryObj){
                             <button data-phrase="${summary.exactPhrase}" class="secondary-button">View on page</button>
                         </div>`
     })
-    
 
     messageDiv.innerHTML = `<img src="../../assets/images/reveal-chat-icon-light.png" alt="reveal chat icon" class="reveal-icon">
 
@@ -282,6 +281,15 @@ function renderAiSummaryFromPage(summaryObj){
                 </div>
     </div>`
 
+    const viewOnPageButtons = messageDiv.querySelectorAll(".secondary-button")
+
+    viewOnPageButtons.forEach((button)=>{
+        button.addEventListener("click", async (e)=>{
+            const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true})
+            const response = await chrome.tabs.sendMessage(tab.id, {highlightWord: e.target.dataset.phrase})
+            console.log(e.target.dataset.phrase)
+        })
+    })
 
     chatBody.appendChild(messageDiv)
     messageDiv.scrollIntoView({
