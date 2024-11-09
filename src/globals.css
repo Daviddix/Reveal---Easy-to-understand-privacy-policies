@@ -9,7 +9,7 @@
     var(--loader-darker) 75%);
 }
 
-:root {
+:root:has(body.light){
     --bg-gradient: linear-gradient(to bottom right, #338fff28, #fafafa 10%);
     --bg-color: #fafafa;
     --l1-elevation: #ffffff;
@@ -30,7 +30,7 @@
 }
 
 
-/* :root {
+:root:has(body.dark) {
     --bg-gradient: linear-gradient(to bottom right, #338fff28, #191919 10%);
     --bg-color: #191919;
     --l1-elevation: #262626;
@@ -48,7 +48,8 @@
 
     --main-heading-color: #ffffff;
     --sub-heading-color: #BABABA;
-} */
+    --hover-color: hsl(213, 5%, 20%);
+}
 
 
 @font-face {
@@ -235,8 +236,14 @@ nav .menu{
     row-gap: 1rem;
 }
 
-.menu-options > button{
+.menu-options > a{
+    text-decoration: none;
+    width:100%;
+}
+
+.menu-options > a button{
     height: 4rem;
+    width:100%;
     border: none;
     color: var(--main-text-color); 
     background-color: var(--l1-elevation);
@@ -254,14 +261,19 @@ nav .menu{
     font-size: 1.6rem;
 }
 
-.menu-options > button img{
+.menu-options > a button svg{
     width:2rem;
+    stroke: var(--secondary-button-border-color) !important;
 }
 
 .menu-options button.active{
     color: #fff;
     background-color: var(--primary-button-color);
     border:1px solid var(--primary-button-border-color);
+}
+
+.menu-options button.active svg{
+    stroke : #fff !important;
 }
 
 nav .overlay{

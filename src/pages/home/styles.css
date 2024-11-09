@@ -167,6 +167,7 @@
 .options .active-option{
     border:none;
     display:flex;
+    color: var(--sub-text-color);
     font-weight: 500;
 }
 

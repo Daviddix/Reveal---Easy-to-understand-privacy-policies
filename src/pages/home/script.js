@@ -130,7 +130,7 @@ async function startAiMessageProcessingFromPaste(value, source){
 
         skeletonDiv.remove()
         toggleInputState()
-        renderAiSummaryFromPaste(responseInJson, source)
+        renderAiSummaryFromPaste(responseInJson)
         console.log(responseInJson) 
     }
     catch(err){
@@ -212,14 +212,6 @@ function renderAiSummaryFromPaste(summaryObj){
     messageDiv.className = "reveal-ai-message"
     const summaryTitle = `Privacy Policy Summary for ${summaryObj.title}`
     let allSingleSummary =  ``
-
-            allSingleSummary += `<div class="single-summary">
-                            <h1>${summary.title}</h1>
-        
-                            <p>${summary.description}</p>
-        
-                            <button class="secondary-button">View on page</button>
-                        </div>`
 
         summaryObj.summary.forEach((summary)=>{
             allSingleSummary += `<div class="single-summary">
