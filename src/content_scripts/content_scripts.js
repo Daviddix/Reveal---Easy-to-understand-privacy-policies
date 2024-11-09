@@ -19,7 +19,7 @@ function highlightText(phrase) {
     const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     
     // Create a regular expression to find all instances of the phrase (case-insensitive)
-    const regex = new RegExp(escapedPhrase, "gi");
+    const regex = new RegExp(`(?!<mark>)${escapedPhrase}(?!<\/mark>)`, "gi");
     
     let firstHighlightedElement = null;  // Store the first highlighted element
 
