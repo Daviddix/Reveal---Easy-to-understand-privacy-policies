@@ -11,6 +11,12 @@ const linkIcon = document.querySelector(".support-container > img[alt='open link
 const themeSwitcherIcon = document.querySelector(".theme-switch > img")
 const searchIcon = document.querySelector(".search > img[alt='search icon']")
 const allViewMoreIcons = document.querySelectorAll(".single-policy-bottom button img[alt='view more icon']")
+const saveIcon = document.querySelector(".save-container img[alt='save icon']")
+
+//globals
+window.AppGlobals = window.AppGlobals || {
+    appTheme: ""
+};
 
 hamburgerMenu.addEventListener("click", (e)=>{
     nav.classList.add("open")
@@ -32,6 +38,7 @@ themeSwitchButton.addEventListener("click", ()=>{
 
 async function switchToDarkMode(){
     await chrome.storage.local.set({revealTheme : "dark"})
+    AppGlobals.appTheme = "dark"
     document.body.classList.remove("light")
     document.body.classList.add("dark")
     hamburgerIcon.src = hamburgerIcon.src.replace("light", "dark")
@@ -47,10 +54,13 @@ async function switchToDarkMode(){
     }) : null
 
     viewMoreButton ? viewMoreButton.src = viewMoreButton.src.replace("light", "dark") : null
+
+    saveIcon ? saveIcon.src = saveIcon.src.replace("light", "dark") : null
 }
 
 async function switchToLightMode(){
     await chrome.storage.local.set({revealTheme : "light"})
+    AppGlobals.appTheme = "light"
     document.body.classList.remove("dark")
     document.body.classList.add("light")
     hamburgerIcon.src = hamburgerIcon.src.replace("dark", "light")
@@ -66,6 +76,8 @@ async function switchToLightMode(){
     }) : null
 
     viewMoreButton ? viewMoreButton.src = viewMoreButton.src.replace("dark", "light") : null
+
+    saveIcon ? saveIcon.src = saveIcon.src.replace("dark", "light") : null
 }
 
 async function init(){

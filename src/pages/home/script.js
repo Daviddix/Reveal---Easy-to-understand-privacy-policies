@@ -16,13 +16,11 @@ init(policySource)
 //eventListeners
 policyForm.addEventListener("submit", async (e)=>{
     e.preventDefault()
+    toggleInputState()
     const pastedValue = policyTextarea.value.trim()
     if(policySource == "Extract From Page"){
         const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true})
         const response = await chrome.tabs.sendMessage(tab.id, {action: "getAllHTML"})
-        console.log(response.allHTML)
-        console.log(response.allHTML.html)
-        console.log(response.allHTML.text)
 
         const pageHTMLValue = response.allHTML.html
         const pageHTMLValueAsText = response.allHTML.text
@@ -108,7 +106,6 @@ function renderNewUserMessage(value){
 }
 
 async function startAiMessageProcessingFromPaste(value, source){
-    toggleInputState()
     const skeletonDiv = renderAiMessageSkeleton()
     try{
         console.log(source)
@@ -129,7 +126,7 @@ async function startAiMessageProcessingFromPaste(value, source){
         }
 
         skeletonDiv.remove()
-        toggleInputState()
+
         renderAiSummaryFromPaste(responseInJson)
         console.log(responseInJson) 
     }
@@ -141,7 +138,6 @@ async function startAiMessageProcessingFromPaste(value, source){
 }
 
 async function startAiMessageProcessingFromPage(value, source){
-    toggleInputState()
     const skeletonDiv = renderAiMessageSkeleton()
     try{
         const rawFetch = await fetch(`${baseUrl}/api/summary/page`, {
@@ -161,7 +157,7 @@ async function startAiMessageProcessingFromPage(value, source){
         }
 
         skeletonDiv.remove()
-        toggleInputState()
+
         renderAiSummaryFromPage(responseInJson)
         console.log(responseInJson) 
     }
@@ -213,14 +209,14 @@ function renderAiSummaryFromPaste(summaryObj){
     const summaryTitle = `Privacy Policy Summary for ${summaryObj.title}`
     let allSingleSummary =  ``
 
-        summaryObj.summary.forEach((summary)=>{
+    summaryObj.summary.forEach((summary)=>{
             allSingleSummary += `<div class="single-summary">
                             <h1>${summary.title}</h1>
         
                             <p>${summary.description}</p>
     
                         </div>`
-        })
+    })
 
     messageDiv.innerHTML = ` <img src="../../assets/images/reveal-chat-icon-light.png" alt="reveal chat icon" class="reveal-icon">
 
@@ -232,15 +228,44 @@ function renderAiSummaryFromPaste(summaryObj){
                 </div>
 
                 <div class="reveal-bubble-footer"> 
-                    <button class="save-container"> <img src="../../assets/icons/save-icon-light.svg" alt="save icon"> <h3>Save</h3></button> 
+                    <button class="save-container"> 
+                    <img src="../../assets/icons/save-icon-light.svg" alt="save icon"> <h3>Save</h3>
+                    </button> 
                 </div>
     </div>`
+
+    const saveButton = messageDiv.querySelector(".save-container")
+
+    saveButton.addEventListener("click", async (e)=>{
+        await savePolicyToStorage(summaryObj)
+        const oldValue = saveButton.innerHTML 
+        saveButton.innerHTML = `<h3>Saved</h3>`
+
+        setTimeout(() => {
+            saveButton.innerHTML = oldValue
+        }, 1500);
+    })
+
     chatBody.appendChild(messageDiv)
+    toggleInputState()
+
     messageDiv.scrollIntoView({
         block : "start",
         inline : "nearest",
         behavior : "smooth"
     })
+}
+
+async function savePolicyToStorage(policyObj){
+    const previous = await chrome.storage.local.get(["revealSavedPolicies"])
+    const previousValueInStorage = await previous.revealSavedPolicies || []
+
+    const newValue = [
+        ...previousValueInStorage,
+        policyObj
+    ]
+
+    await chrome.storage.local.set({revealSavedPolicies : newValue})
 }
 
 function renderAiSummaryFromPage(summaryObj){
@@ -278,12 +303,25 @@ function renderAiSummaryFromPage(summaryObj){
     viewOnPageButtons.forEach((button)=>{
         button.addEventListener("click", async (e)=>{
             const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true})
-            const response = await chrome.tabs.sendMessage(tab.id, {highlightWord: e.target.dataset.phrase})
+            await chrome.tabs.sendMessage(tab.id, {highlightWord: e.target.dataset.phrase})
             console.log(e.target.dataset.phrase)
         })
     })
 
+    const saveButton = messageDiv.querySelector(".save-container")
+
+    saveButton.addEventListener("click", async (e)=>{
+        await savePolicyToStorage(summaryObj)
+        const oldValue = saveButton.innerHTML 
+        saveButton.innerHTML = `<h3>Saved</h3>`
+
+        setTimeout(() => {
+            saveButton.innerHTML = oldValue
+        }, 1500);
+    })
+
     chatBody.appendChild(messageDiv)
+    toggleInputState()
     messageDiv.scrollIntoView({
         block : "start",
         inline : "nearest",
@@ -292,7 +330,7 @@ function renderAiSummaryFromPage(summaryObj){
 }
 
 function updatePolicySourceUi(value){
-    summaryOptionsToggle.innerHTML = `${value} <img src="../../assets/icons/view-more-light.svg" alt="view more">`
+    summaryOptionsToggle.innerHTML = `${value} <img src= ../../assets/icons/view-more-${AppGlobals.appTheme == "light" ? "light" : "dark"}.svg alt="view more">`
 }
 
 function updateTextareaUI(value){

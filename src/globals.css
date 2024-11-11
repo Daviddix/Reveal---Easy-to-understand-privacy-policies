@@ -1,12 +1,6 @@
 :root{
     --success-color : #268244;
     --error-color: #C43D3D;
-
-    --loader-darker: hsl(213, 100%, 97%);
-    --loader-bg : linear-gradient(90deg,
-    var(--loader-darker) 25%,
-    var(--l1-elevation) 50%,
-    var(--loader-darker) 75%);
 }
 
 :root:has(body.light){
@@ -27,6 +21,12 @@
     --main-heading-color: #000000;
     --sub-heading-color: #4B4B4B;
     --hover-color: hsl(213, 30%, 95%);
+
+    --loader-darker: hsl(213, 100%, 97%);
+    --loader-bg : linear-gradient(90deg,
+    var(--loader-darker) 25%,
+    var(--l1-elevation) 50%,
+    var(--loader-darker) 75%);
 }
 
 
@@ -49,6 +49,12 @@
     --main-heading-color: #ffffff;
     --sub-heading-color: #BABABA;
     --hover-color: hsl(213, 5%, 20%);
+
+    --loader-darker: hsl(213, 0%, 10%);
+    --loader-bg : linear-gradient(90deg,
+    var(--loader-darker) 25%,
+    var(--l1-elevation) 50%,
+    var(--loader-darker) 75%);
 }
 
 
