@@ -133,6 +133,11 @@ button{
     background-color: transparent;
 }
 
+a{
+    text-decoration : none;
+    color: transparent;
+}
+
 .wrapper{
     padding-inline: 2rem;
 }

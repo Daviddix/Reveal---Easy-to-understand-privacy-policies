@@ -16,7 +16,6 @@ init(policySource)
 //eventListeners
 policyForm.addEventListener("submit", async (e)=>{
     e.preventDefault()
-    toggleInputState()
     const pastedValue = policyTextarea.value.trim()
     if(policySource == "Extract From Page"){
         const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true})
@@ -39,6 +38,7 @@ policyForm.addEventListener("submit", async (e)=>{
         }
     
         allMessages.push(userMessageAsObj, aiMessageAsObj)
+        toggleInputState()
         renderDiv(userMessageAsObj)
         renderDiv(aiMessageAsObj)
         policyTextarea.value = ""
@@ -259,6 +259,9 @@ function renderAiSummaryFromPaste(summaryObj){
 async function savePolicyToStorage(policyObj){
     const previous = await chrome.storage.local.get(["revealSavedPolicies"])
     const previousValueInStorage = await previous.revealSavedPolicies || []
+    policyObj.tag = randomTag()
+    const d = new Date()
+    policyObj.date = d.toDateString()
 
     const newValue = [
         ...previousValueInStorage,
@@ -327,6 +330,13 @@ function renderAiSummaryFromPage(summaryObj){
         inline : "nearest",
         behavior : "smooth"
     })
+}
+
+function randomTag(){
+    const tags = ["red", "green", "blue", "yellow"]
+    const randomIndex = Math.ceil(Math.random() * tags.length)
+
+    return tags[randomIndex]
 }
 
 function updatePolicySourceUi(value){

@@ -2,6 +2,7 @@ const hamburgerMenu = document.querySelector(".menu-icon")
 const nav = document.querySelector(".nav")
 const navCloseButton = document.querySelector(".nav .overlay > button")
 const themeSwitchButton = document.querySelector(".theme-switch")
+const supportButton = document.querySelector(".support-container")
 
 const hamburgerIcon = document.querySelector("header button img[alt = 'menu icon']")
 const viewMoreButton = document.querySelector(".active-option > img[alt='view more']")
@@ -34,6 +35,10 @@ themeSwitchButton.addEventListener("click", ()=>{
     }else if(document.body.classList.contains("dark")){
         switchToLightMode()
     }
+})
+
+supportButton.addEventListener("click", ()=>{
+    chrome.tabs.create({ url: "https://buymeacoffee.com/david05" })
 })
 
 async function switchToDarkMode(){
