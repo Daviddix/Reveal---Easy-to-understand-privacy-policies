@@ -141,6 +141,7 @@
 .single-summary > h1{
     color: var(--main-heading-color);
     font-size: 1.6rem;
+    margin: 0 0 .7rem 0;
 }
 
 .single-summary > p{

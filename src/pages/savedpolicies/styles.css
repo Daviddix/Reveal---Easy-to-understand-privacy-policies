@@ -71,6 +71,7 @@
 .single-policy-top h1{
     font-size: 1.6rem;
     color: var(--main-heading-color);
+    margin: 0 0 .7rem 0;
 }
 
 .single-policy-top > button{
