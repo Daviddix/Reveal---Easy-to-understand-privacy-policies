@@ -306,7 +306,7 @@ function renderAiSummaryFromPage(summaryObj){
         
                             <p>${summary.description}</p>
         
-                            <button data-phrase="${summary.exactPhrase}" class="secondary-button">View on page</button>
+                            <button data-phrase="${summary.exactPhrase.replaceAll(`"`, `'revealQuote`)}" class="secondary-button">View on page</button>
                         </div>`
     })
 

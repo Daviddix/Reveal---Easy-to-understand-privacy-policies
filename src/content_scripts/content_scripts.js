@@ -15,43 +15,76 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse)=>{
 })
 
 function highlightText(phrase) {
+    if (!phrase || typeof phrase !== 'string') {
+        return;
+    }
+
+    // Fix the incorrect quote replacement
+    phrase = phrase.replaceAll("'revealQuote", '"');
+
     // Escape special characters in the phrase to avoid regex issues
     const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     
-    // Create a regular expression to find all instances of the phrase (case-insensitive)
-    const regex = new RegExp(`(?!<mark>)${escapedPhrase}(?!<\/mark>)`, "gi");
+    // Modified regex to properly exclude existing marks
+    const regex = new RegExp(`(?<!<mark[^>]*>)${escapedPhrase}(?![^<]*<\/mark>)`, "gi");
     
-    let firstHighlightedElement = null;  // Store the first highlighted element
+    let firstHighlightedElement = null;
 
     // Traverse all text nodes in the document
     function walkThroughNodes(node) {
-        // If this is a text node and contains the phrase, replace it
         if (node.nodeType === Node.TEXT_NODE) {
-            if (regex.test(node.nodeValue)) {
-                // Create a span for the highlighted text
-                const span = document.createElement("span");
-                span.className = "highlight"; // Add the highlight class
-                span.innerHTML = node.nodeValue.replace(regex, `<mark>$&</mark>`);
+            const text = node.nodeValue;
+            // Reset regex lastIndex to ensure proper testing
+            regex.lastIndex = 0;
+            
+            if (regex.test(text)) {
+                // Reset lastIndex again for the replacement
+                regex.lastIndex = 0;
                 
-                // Replace the text node with the new highlighted span
+                const span = document.createElement("span");
+                span.className = "highlight";
+                
+                // Create a temporary container for the HTML content
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = text.replace(regex, '<mark>$&</mark>');
+                
+                // Use innerHTML to parse the HTML, then move the nodes
+                while (tempContainer.firstChild) {
+                    span.appendChild(tempContainer.firstChild);
+                }
+                
                 node.parentNode.replaceChild(span, node);
 
-                // Save the first highlighted element for scrolling
                 if (!firstHighlightedElement) {
                     firstHighlightedElement = span.querySelector("mark");
                 }
             }
-        } else {
-            // Recursively check child nodes
-            node.childNodes.forEach(walkThroughNodes);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            // Skip if the node is already a mark element or is in a script/style tag
+            if (node.nodeName.toLowerCase() === 'mark' || 
+                node.nodeName.toLowerCase() === 'script' || 
+                node.nodeName.toLowerCase() === 'style') {
+                return;
+            }
+            
+            // Convert live NodeList to Array to avoid modification issues
+            Array.from(node.childNodes).forEach(walkThroughNodes);
         }
     }
 
-    // Start traversal from the body
-    document.body.childNodes.forEach(walkThroughNodes);
+    try {
+        Array.from(document.body.childNodes).forEach(walkThroughNodes);
 
-    // Scroll the first highlighted element into view, if found
-    if (firstHighlightedElement) {
-        firstHighlightedElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (firstHighlightedElement) {
+            firstHighlightedElement.scrollIntoView({ 
+                behavior: "smooth", 
+                block: "center",
+                inline: "nearest"
+            });
+        }
+    } catch (error) {
+        console.error('Error while highlighting text:', error);
     }
+
+    return firstHighlightedElement;
 }
