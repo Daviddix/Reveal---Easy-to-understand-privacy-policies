@@ -38,7 +38,6 @@ policyForm.addEventListener("submit", async (e)=>{
         }
     
         allMessages.push(userMessageAsObj, aiMessageAsObj)
-        toggleInputState()
         renderDiv(userMessageAsObj)
         renderDiv(aiMessageAsObj)
         policyTextarea.value = ""
@@ -101,14 +100,14 @@ function renderNewUserMessage(value){
                 <p>${value}</p>
             </div>
 
-            <img src="" alt="user icon" class="user-icon">`
+            <div class="user-icon"></div>`
     chatBody.appendChild(userDiv)
 }
 
-async function startAiMessageProcessingFromPaste(value, source){
+async function startAiMessageProcessingFromPaste(value){
+    toggleInputState()
     const skeletonDiv = renderAiMessageSkeleton()
     try{
-        console.log(source)
         const rawFetch = await fetch(`${baseUrl}/api/summary`, {
             method : "POST",
             body : JSON.stringify({
@@ -121,23 +120,26 @@ async function startAiMessageProcessingFromPaste(value, source){
 
         const responseInJson = await rawFetch.json()
 
-        if(!rawFetch.ok){
+        if(!rawFetch.ok || responseInJson.status == "error"){
             throw new Error("an error ocurred", {cause : responseInJson})
         }
 
         skeletonDiv.remove()
 
         renderAiSummaryFromPaste(responseInJson)
-        console.log(responseInJson) 
     }
     catch(err){
         skeletonDiv.remove()
-        renderErrorUi(value, source)
+        renderErrorUiFromPaste(value)
         console.error(err)
+    }
+    finally{
+        toggleInputState()
     }
 }
 
-async function startAiMessageProcessingFromPage(value, source){
+async function startAiMessageProcessingFromPage(value){
+    toggleInputState()
     const skeletonDiv = renderAiMessageSkeleton()
     try{
         const rawFetch = await fetch(`${baseUrl}/api/summary/page`, {
@@ -152,19 +154,22 @@ async function startAiMessageProcessingFromPage(value, source){
 
         const responseInJson = await rawFetch.json()
 
-        if(!rawFetch.ok){
+        if(!rawFetch.ok || responseInJson.status == "error"){
             throw new Error("an error ocurred", {cause : responseInJson})
         }
 
         skeletonDiv.remove()
 
         renderAiSummaryFromPage(responseInJson)
-        console.log(responseInJson) 
+
     }
     catch(err){
         skeletonDiv.remove()
-        renderErrorUi(value, source)
+        renderErrorUiFromPage(value)
         console.error(err)
+    }
+    finally{
+    toggleInputState()
     }
 }
 
@@ -184,17 +189,30 @@ function renderAiMessageSkeleton(){
     return skeletonDiv
 }
 
-function renderErrorUi(value, source){
+function renderErrorUiFromPage(value){
+    console.log(value)
     const errorDiv = document.createElement("div")
     errorDiv.className = "reveal-ai-error-bubble"
     const button = document.createElement("button")
     button.addEventListener("click", ()=>{
         errorDiv.remove()
-        if(source == "Paste Manually"){
-            startAiMessageProcessingFromPaste(value, source)
-        }else if(source == "Extract From Page"){
-            startAiMessageProcessingFromPage(value, source)
-        }
+        startAiMessageProcessingFromPage(value)
+    })
+    button.textContent = "Retry"
+    errorDiv.innerHTML = `
+            <p>Oops, seems like an error ocurred when we tried to generate your policy summary, please try again</p>`
+    errorDiv.appendChild(button)
+    chatBody.appendChild(errorDiv)
+}
+
+function renderErrorUiFromPaste(value){
+    console.log(value)
+    const errorDiv = document.createElement("div")
+    errorDiv.className = "reveal-ai-error-bubble"
+    const button = document.createElement("button")
+    button.addEventListener("click", ()=>{
+        errorDiv.remove()
+        startAiMessageProcessingFromPaste(value)
     })
     button.textContent = "Retry"
     errorDiv.innerHTML = `
@@ -247,7 +265,6 @@ function renderAiSummaryFromPaste(summaryObj){
     })
 
     chatBody.appendChild(messageDiv)
-    toggleInputState()
 
     messageDiv.scrollIntoView({
         block : "start",
@@ -330,7 +347,6 @@ function renderAiSummaryFromPage(summaryObj){
     })
 
     chatBody.appendChild(messageDiv)
-    toggleInputState()
     messageDiv.scrollIntoView({
         block : "start",
         inline : "nearest",
