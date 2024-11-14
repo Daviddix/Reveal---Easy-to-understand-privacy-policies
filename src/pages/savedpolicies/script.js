@@ -4,6 +4,13 @@ async function init() {
     const savedPolicies = await chrome.storage.local.get(["revealSavedPolicies"]);
     const savedPoliciesInStorage = savedPolicies.revealSavedPolicies || [];
 
+    if(savedPoliciesInStorage.length == 0){
+        allPoliciesContainer.innerHTML = `
+        <p class="empty">Seems like you haven't saved any policies yet</p>
+        `
+        return
+    }
+
     // Clear the container first
     allPoliciesContainer.innerHTML = "";
 
@@ -19,6 +26,7 @@ async function init() {
                     <p>${p.description}</p>
                 </div>`;
         }).join("");  // Convert array to a single string
+
 
         mainDiv.innerHTML = `
             <div class="single-policy-left">
@@ -71,12 +79,24 @@ async function init() {
 
         const policyModal = mainDiv.querySelector(".policy-modal")
 
+        const deleteButton = mainDiv.querySelector(".single-policy-top button.right")
+
         displayModal.addEventListener("click", ()=>{
             policyModal.classList.add("open")
         })
 
         closeModal.addEventListener("click", ()=>{
             policyModal.classList.remove("open")
+        })
+
+        deleteButton.addEventListener("click", async ()=>{
+            console.log(policy)
+
+        const newSavedPolicies = savedPoliciesInStorage.filter((item) => item.id !== policy.id)
+
+        await chrome.storage.local.set({revealSavedPolicies : newSavedPolicies})
+
+        init()
         })
     });
 }

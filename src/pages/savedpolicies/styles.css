@@ -8,6 +8,12 @@
     row-gap: 1.5rem;
 }
 
+.saved-policies-container > p.empty{
+    font-size: 1.2rem;
+    text-align: center;
+    color: var(--sub-text-color);
+}
+
 .single-saved-policy{
     padding:.8rem;
     box-shadow: 0 .25rem .1rem #26262613;

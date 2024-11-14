@@ -258,9 +258,15 @@ function renderAiSummaryFromPaste(summaryObj){
 
 async function savePolicyToStorage(policyObj){
     const previous = await chrome.storage.local.get(["revealSavedPolicies"])
+
     const previousValueInStorage = await previous.revealSavedPolicies || []
+
     policyObj.tag = randomTag()
+
+    policyObj.id = Date.now()
+
     const d = new Date()
+
     policyObj.date = d.toDateString()
 
     const newValue = [
@@ -334,7 +340,7 @@ function renderAiSummaryFromPage(summaryObj){
 
 function randomTag(){
     const tags = ["red", "green", "blue", "yellow"]
-    const randomIndex = Math.ceil(Math.random() * tags.length)
+    const randomIndex = Math.ceil(Math.random() * tags.length - 1)
 
     return tags[randomIndex]
 }
