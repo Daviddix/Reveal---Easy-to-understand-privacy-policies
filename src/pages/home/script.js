@@ -9,6 +9,19 @@ const optionsButtons = document.querySelectorAll(".modal-options > button")
 const generateSummaryButton = document.querySelector(".policy-form .primary")
 let policySource = summaryOptionsToggle.innerText
 const inputArea = document.querySelector(".input-section")
+const saveSvg = `<svg viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_50_209)">
+<path d="M4.75 5.25H1.25C1.11739 5.25 0.990215 5.19732 0.896447 5.10355C0.802678 5.00979 0.75 4.88261 0.75 4.75V1.25C0.75 1.11739 0.802678 0.990215 0.896447 0.896447C0.990215 0.802678 1.11739 0.75 1.25 0.75H4L5.25 2V4.75C5.25 4.88261 5.19732 5.00979 5.10355 5.10355C5.00979 5.19732 4.88261 5.25 4.75 5.25Z" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M4.25 5.25V3.25H1.75V5.25" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1.75 0.75V2H3.75" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_50_209">
+<rect width="6" height="6" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+`
 
 //initial function
 init(policySource)
@@ -247,7 +260,10 @@ function renderAiSummaryFromPaste(summaryObj){
 
                 <div class="reveal-bubble-footer"> 
                     <button class="save-container"> 
-                    <img src="../../assets/icons/save-icon-light.svg" alt="save icon"> <h3>Save</h3>
+
+                    ${saveSvg}
+
+                    <h3>Save</h3>
                     </button> 
                 </div>
     </div>`
@@ -320,7 +336,11 @@ function renderAiSummaryFromPage(summaryObj){
                 </div>
 
                 <div class="reveal-bubble-footer"> 
-                    <button class="save-container"> <img src="../../assets/icons/save-icon-light.svg" alt="save icon"> <h3>Save</h3></button> 
+                    <button class="save-container"> 
+
+                    ${saveSvg}
+
+                    <h3>Save</h3></button> 
                 </div>
     </div>`
 

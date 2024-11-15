@@ -13,6 +13,7 @@ const themeSwitcherIcon = document.querySelector(".theme-switch > img")
 const searchIcon = document.querySelector(".search > img[alt='search icon']")
 const allViewMoreIcons = document.querySelectorAll(".single-policy-bottom button img[alt='view more icon']")
 const saveIcon = document.querySelector(".save-container img[alt='save icon']")
+const closeIconSavedPolicies = document.querySelector(".policy-modal button > img[alt='close icon']")
 
 //globals
 window.AppGlobals = window.AppGlobals || {

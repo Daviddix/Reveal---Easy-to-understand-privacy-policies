@@ -131,6 +131,19 @@ input{
 button{
     cursor: pointer;
     background-color: transparent;
+    transition: scale .8s ease-in-out;
+    -webkit-transition: scale .8s ease-in-out;
+    -moz-transition: scale .8s ease-in-out;
+    -ms-transition: scale .8s ease-in-out;
+    -o-transition: scale .8s ease-in-out;
+}
+
+button:active{
+    transform: scale(0.99);
+    -webkit-transform: scale(0.99);
+    -moz-transform: scale(0.99);
+    -ms-transform: scale(0.99);
+    -o-transform: scale(0.99);
 }
 
 a{

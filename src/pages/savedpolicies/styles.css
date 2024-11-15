@@ -120,8 +120,13 @@
     margin: 0 5vw 1rem auto;
 }
 
-.close img{
+.close svg{
     width:4rem;
+    fill: var(--l1-elevation);
+}
+
+.close svg path{
+    stroke: var(--main-text-color);
 }
 
 .policy-modal .modal{
@@ -169,7 +174,7 @@
 }
 
 .single-summary > h1{
-    color: var(--sub-heading-color);
+    color: var(--main-heading-color);
     font-size: 1.6rem;
 }
 
@@ -179,7 +184,7 @@
     opacity: .9;
     font-size: 1.4rem;
     max-width: 95%;
-    margin: 0 0 .5rem 0;
+    margin: .5rem 0 1.5rem 0;
 }
 
 .policy-modal .summary-container{

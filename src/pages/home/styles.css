@@ -164,16 +164,17 @@
     margin: 0 0 0 auto;
     column-gap: .3rem;
     align-items: center;
-
-    img{
-        width: 1.5rem;
-    }
     
     h3{
         font-weight: 600;
         color: var(--sub-heading-color);
         font-size: 1.2rem;
     }
+}
+
+.reveal-ai-bubble .reveal-bubble-footer > button svg{
+    width:1.5rem;
+    stroke: var(--secondary-button-border-color) !important;
 }
 
 .input-section .options{
@@ -283,6 +284,7 @@
     background-color: var(--l1-elevation);
     padding: 1rem;
     resize: none;
+    color: var(--main-text-color);
 }
 
 textarea:read-only{

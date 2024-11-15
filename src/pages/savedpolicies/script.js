@@ -1,4 +1,10 @@
 const allPoliciesContainer = document.querySelector(".saved-policies-container");
+const closeSvg = `<svg viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+<rect width="22" height="22" rx="5"/>
+<path d="M8.5 7.5L14.5 13.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.5 13.5L14.5 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`
 
 async function init() {
     const savedPolicies = await chrome.storage.local.get(["revealSavedPolicies"]);
@@ -54,7 +60,7 @@ async function init() {
 
             <div class="policy-modal">
                 <button class="close">
-                    <img src="../../assets/icons/close-icon-light.svg" alt="close icon">
+                    ${closeSvg}
                 </button>
 
                 <div class="modal">
