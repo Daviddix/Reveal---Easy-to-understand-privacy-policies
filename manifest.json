@@ -6,12 +6,6 @@
     "version" : "0.0.1",
     "action" :{
         "default_popup" : "./src/pages/home/index.html",
-        "default_icon": {
-            "16": "./src/assets/images/icon16(light).png",
-            "32": "./src/assets/images/icon32(light).png",
-            "48": "./src/assets/images/icon48(light).png",
-            "128": "./src/assets/images/icon128(light).png"
-        },
         "default_title": "Easily understand privacy policies"
     },
     "background":{
