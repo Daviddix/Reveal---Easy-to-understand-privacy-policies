@@ -20,6 +20,10 @@
     -o-transform: translateY(10px);
 }
 
+.chat-body .reveal-ai-message{
+    scroll-margin-top: 11px;
+}
+
 .chat-body :is(.user-bubble, .reveal-ai-bubble, .reveal-ai-error-bubble){
     flex: 1;
     background-color: var(--l1-elevation);
@@ -40,7 +44,7 @@
 }
 
 .chat-body .reveal-ai-error-bubble{
-    background-image: linear-gradient(to bottom right, hsl(0, 73%, 98%), 90% ,var(--error-color));
+    background-image: linear-gradient(to bottom right, var(--l1-elevation), 90% ,var(--error-color));
     border:none;
     margin: 0 0 2rem 0;
 }
@@ -69,9 +73,9 @@
     position: absolute;
     bottom:0;
     left:0;
-    width: 85%;
+    width: 89%;
     height: 2rem;
-    background-image: linear-gradient(transparent, var(--bg-color));
+    background-image: linear-gradient(transparent, var(--l1-elevation));
     border-radius:1rem;
     -webkit-border-radius:1rem;
     -moz-border-radius:1rem;
