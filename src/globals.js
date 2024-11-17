@@ -45,6 +45,15 @@ supportButton.addEventListener("click", ()=>{
 async function switchToDarkMode(){
     await chrome.storage.local.set({revealTheme : "dark"})
     AppGlobals.appTheme = "dark"
+    chrome.action.setIcon({
+        path: {
+            16: "/src/assets/images/icon16(dark).png",
+            32: "/src/assets/images/icon32(dark).png",
+            48: "/src/assets/images/icon48(dark).png",
+            128: "/src/assets/images/icon128(dark).png"
+        },
+      });
+      
     document.body.classList.remove("light")
     document.body.classList.add("dark")
     hamburgerIcon.src = hamburgerIcon.src.replace("light", "dark")
@@ -67,6 +76,14 @@ async function switchToDarkMode(){
 async function switchToLightMode(){
     await chrome.storage.local.set({revealTheme : "light"})
     AppGlobals.appTheme = "light"
+    chrome.action.setIcon({
+        path: {
+            16: "/src/assets/images/icon16(light).png",
+            32: "/src/assets/images/icon32(light).png",
+            48: "/src/assets/images/icon48(light).png",
+            128: "/src/assets/images/icon128(light).png"
+        },
+      });
     document.body.classList.remove("dark")
     document.body.classList.add("light")
     hamburgerIcon.src = hamburgerIcon.src.replace("dark", "light")
