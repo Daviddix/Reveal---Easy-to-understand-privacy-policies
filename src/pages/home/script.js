@@ -2,7 +2,7 @@ const policyForm = document.querySelector(".policy-form")
 const policyTextarea = document.querySelector(".policy-textarea")
 const allMessages = []
 const chatBody = document.querySelector(".chat-body")
-const baseUrl = "http://localhost:3000"
+const baseUrl = "https://reveal-backend.onrender.com"
 const summaryOptionsToggle = document.querySelector(".active-option")
 const optionsModal = document.querySelector(".modal")
 const optionsButtons = document.querySelectorAll(".modal-options > button")
@@ -90,8 +90,7 @@ optionsButtons.forEach((button)=>{
     })
 })
 
-
-//functions
+//render functions
 function renderDiv({from , value, source}){
     if(from == "user"){
         renderNewUserMessage(value)
@@ -115,75 +114,6 @@ function renderNewUserMessage(value){
 
             <div class="user-icon"></div>`
     chatBody.appendChild(userDiv)
-}
-
-async function startAiMessageProcessingFromPaste(value){
-    toggleInputState()
-    const skeletonDiv = renderAiMessageSkeleton()
-    try{
-        const rawFetch = await fetch(`${baseUrl}/api/summary`, {
-            method : "POST",
-            body : JSON.stringify({
-                privacyPolicy : value
-            }),
-            headers : {
-                "Content-Type" : "application/json"
-            }
-        })
-
-        const responseInJson = await rawFetch.json()
-
-        if(!rawFetch.ok || responseInJson.status == "error"){
-            throw new Error("an error ocurred", {cause : responseInJson})
-        }
-
-        skeletonDiv.remove()
-
-        renderAiSummaryFromPaste(responseInJson)
-    }
-    catch(err){
-        skeletonDiv.remove()
-        renderErrorUiFromPaste(value)
-        console.error(err)
-    }
-    finally{
-        toggleInputState()
-    }
-}
-
-async function startAiMessageProcessingFromPage(value){
-    toggleInputState()
-    const skeletonDiv = renderAiMessageSkeleton()
-    try{
-        const rawFetch = await fetch(`${baseUrl}/api/summary/page`, {
-            method : "POST",
-            body : JSON.stringify({
-                privacyPolicy : value
-            }),
-            headers : {
-                "Content-Type" : "application/json"
-            }
-        })
-
-        const responseInJson = await rawFetch.json()
-
-        if(!rawFetch.ok || responseInJson.status == "error"){
-            throw new Error("an error ocurred", {cause : responseInJson})
-        }
-
-        skeletonDiv.remove()
-
-        renderAiSummaryFromPage(responseInJson)
-
-    }
-    catch(err){
-        skeletonDiv.remove()
-        renderErrorUiFromPage(value)
-        console.error(err)
-    }
-    finally{
-    toggleInputState()
-    }
 }
 
 function renderAiMessageSkeleton(){
@@ -289,27 +219,6 @@ function renderAiSummaryFromPaste(summaryObj){
     })
 }
 
-async function savePolicyToStorage(policyObj){
-    const previous = await chrome.storage.local.get(["revealSavedPolicies"])
-
-    const previousValueInStorage = await previous.revealSavedPolicies || []
-
-    policyObj.tag = randomTag()
-
-    policyObj.id = Date.now()
-
-    const d = new Date()
-
-    policyObj.date = d.toDateString()
-
-    const newValue = [
-        ...previousValueInStorage,
-        policyObj
-    ]
-
-    await chrome.storage.local.set({revealSavedPolicies : newValue})
-}
-
 function renderAiSummaryFromPage(summaryObj){
     const  messageDiv = document.createElement("div")
     messageDiv.className = "reveal-ai-message"
@@ -374,11 +283,9 @@ function renderAiSummaryFromPage(summaryObj){
     })
 }
 
-function randomTag(){
-    const tags = ["red", "green", "blue", "yellow"]
-    const randomIndex = Math.ceil(Math.random() * tags.length - 1)
-
-    return tags[randomIndex]
+//state functions
+function toggleInputState(){
+    inputArea.classList.toggle("loading")
 }
 
 function updatePolicySourceUi(value){
@@ -397,10 +304,105 @@ function updateTextareaUI(value){
     }
 }
 
-async function init(initialValue){
-    updateTextareaUI(initialValue)
+//processing functions
+async function startAiMessageProcessingFromPaste(value){
+    toggleInputState()
+    const skeletonDiv = renderAiMessageSkeleton()
+    try{
+        const rawFetch = await fetch(`${baseUrl}/api/summary`, {
+            method : "POST",
+            body : JSON.stringify({
+                privacyPolicy : value
+            }),
+            headers : {
+                "Content-Type" : "application/json"
+            }
+        })
+
+        const responseInJson = await rawFetch.json()
+
+        if(!rawFetch.ok || responseInJson.status == "error"){
+            throw new Error("an error ocurred", {cause : responseInJson})
+        }
+
+        skeletonDiv.remove()
+
+        renderAiSummaryFromPaste(responseInJson)
+    }
+    catch(err){
+        skeletonDiv.remove()
+        renderErrorUiFromPaste(value)
+        console.error(err)
+    }
+    finally{
+        toggleInputState()
+    }
 }
 
-function toggleInputState(){
-    inputArea.classList.toggle("loading")
+async function startAiMessageProcessingFromPage(value){
+    toggleInputState()
+    const skeletonDiv = renderAiMessageSkeleton()
+    try{
+        const rawFetch = await fetch(`${baseUrl}/api/summary/page`, {
+            method : "POST",
+            body : JSON.stringify({
+                privacyPolicy : value
+            }),
+            headers : {
+                "Content-Type" : "application/json"
+            }
+        })
+
+        const responseInJson = await rawFetch.json()
+
+        if(!rawFetch.ok || responseInJson.status == "error"){
+            throw new Error("an error ocurred", {cause : responseInJson})
+        }
+
+        skeletonDiv.remove()
+
+        renderAiSummaryFromPage(responseInJson)
+
+    }
+    catch(err){
+        skeletonDiv.remove()
+        renderErrorUiFromPage(value)
+        console.error(err)
+    }
+    finally{
+    toggleInputState()
+    }
+}
+
+//normal functions
+async function savePolicyToStorage(policyObj){
+    const previous = await chrome.storage.local.get(["revealSavedPolicies"])
+
+    const previousValueInStorage = await previous.revealSavedPolicies || []
+
+    policyObj.tag = randomTag()
+
+    policyObj.id = Date.now()
+
+    const d = new Date()
+
+    policyObj.date = d.toDateString()
+
+    const newValue = [
+        ...previousValueInStorage,
+        policyObj
+    ]
+
+    await chrome.storage.local.set({revealSavedPolicies : newValue})
+}
+
+function randomTag(){
+    const tags = ["red", "green", "blue", "yellow"]
+    const randomIndex = Math.ceil(Math.random() * tags.length - 1)
+
+    return tags[randomIndex]
+}
+
+async function init(initialValue){
+    updateTextareaUI(initialValue)
 }

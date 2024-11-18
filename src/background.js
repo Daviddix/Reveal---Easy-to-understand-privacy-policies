@@ -3,6 +3,10 @@ chrome.runtime.onInstalled.addListener(async ()=>{
     await enableSidePanel()
 })
 
+chrome.runtime.onStartup.addListener(async ()=>{
+  await updateIconTheme()
+})
+
 async function enableSidePanel(){
     chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
