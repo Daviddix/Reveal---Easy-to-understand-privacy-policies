@@ -179,7 +179,7 @@ function renderAiSummaryFromPaste(summaryObj){
                         </div>`
     })
 
-    messageDiv.innerHTML = ` <img src="../../assets/images/reveal-chat-icon-light.png" alt="reveal chat icon" class="reveal-icon">
+    messageDiv.innerHTML = ` <img src="../../assets/images/reveal-chat-icon-${AppGlobals.appTheme == "light" ? "light" : "dark"}.png" alt="reveal chat icon" class="reveal-icon">
 
             <div class="reveal-ai-bubble">
                 <div class="reveal-bubble-header"> <h1>${summaryTitle}</h1></div>
@@ -235,7 +235,7 @@ function renderAiSummaryFromPage(summaryObj){
                         </div>`
     })
 
-    messageDiv.innerHTML = `<img src="../../assets/images/reveal-chat-icon-light.png" alt="reveal chat icon" class="reveal-icon">
+    messageDiv.innerHTML = `<img src="../../assets/images/reveal-chat-icon-${AppGlobals.appTheme == "light" ? "light" : "dark"}.png" alt="reveal chat icon" class="reveal-icon">
 
             <div class="reveal-ai-bubble">
                 <div class="reveal-bubble-header"> <h1>${summaryTitle}</h1></div>

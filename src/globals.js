@@ -43,6 +43,8 @@ supportButton.addEventListener("click", ()=>{
 })
 
 async function switchToDarkMode(){
+    const revealChatIcons = document.querySelectorAll(".reveal-ai-message .reveal-icon")
+
     await chrome.storage.local.set({revealTheme : "dark"})
     AppGlobals.appTheme = "dark"
     chrome.action.setIcon({
@@ -68,12 +70,18 @@ async function switchToDarkMode(){
         icon.src = icon.src.replace("light", "dark")
     }) : null
 
+    revealChatIcons ? revealChatIcons.forEach((icon)=>{
+        icon.src = icon.src.replace("light", "dark")
+    }) : null
+
     viewMoreButton ? viewMoreButton.src = viewMoreButton.src.replace("light", "dark") : null
 
     saveIcon ? saveIcon.src = saveIcon.src.replace("light", "dark") : null
 }
 
 async function switchToLightMode(){
+    const revealChatIcons = document.querySelectorAll(".reveal-ai-message .reveal-icon")
+
     await chrome.storage.local.set({revealTheme : "light"})
     AppGlobals.appTheme = "light"
     chrome.action.setIcon({
@@ -95,6 +103,10 @@ async function switchToLightMode(){
     searchIcon? searchIcon.src = searchIcon.src.replace("dark", "light") : null
 
     allViewMoreIcons ? allViewMoreIcons.forEach((icon)=>{
+        icon.src = icon.src.replace("dark", "light")
+    }) : null
+
+    revealChatIcons ? revealChatIcons.forEach((icon)=>{
         icon.src = icon.src.replace("dark", "light")
     }) : null
 
