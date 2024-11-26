@@ -143,7 +143,7 @@ function renderErrorUiFromPage(value){
     })
     button.textContent = "Retry"
     errorDiv.innerHTML = `
-            <p>Oops, seems like an error ocurred when we tried to generate your policy summary, please try again</p>`
+            <p>Oops, seems like an error occurred when we tried to generate your policy summary, please try again</p>`
     errorDiv.appendChild(button)
     chatBody.appendChild(errorDiv)
 }
@@ -159,7 +159,7 @@ function renderErrorUiFromPaste(value){
     })
     button.textContent = "Retry"
     errorDiv.innerHTML = `
-            <p>Oops, seems like an error ocurred when we tried to generate your policy summary, please try again</p>`
+            <p>Oops, seems like an error occurred when we tried to generate your policy summary, please try again</p>`
     errorDiv.appendChild(button)
     chatBody.appendChild(errorDiv)
 }
