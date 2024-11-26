@@ -29,7 +29,7 @@ Easily save privacy policies for future reference.
 
 ### Link
 
-- Extension Link: <i>Coming Soon </i>
+- Extension Link: [Download Reveal for Chrome](https://chromewebstore.google.com/detail/reveal-instantly-understa/doapfofebjnljdcdpkknadbnojikkokp)
 
 
 ### Built with
