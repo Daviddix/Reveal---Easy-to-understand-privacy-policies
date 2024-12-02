@@ -3,7 +3,7 @@
     "key" : "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq5xc1VNcR2SZXLW/m1s9AOe0jjxoxkYuSz8DCTPS55ZTvXEok7pu8qPLWqSUEq8EQw6yk/Vhv+/zPUjcRosDAwFd7APcfo+hZCjN2K7oDTMtIyW1IuHSdlo3fuaFBLiWeQjjiQyOcjzNEWz7Fl4ywzLOimk9yfZR8j39bzLhB1tZy7V1Fpv78bPg6NZwvTPYt4IcL5uDrPxyytjEeraDS2W2FU9CgZAqxelqz8c9sh1HH2dHYwfHbdGUyyFA5nV1ZOCel5kBjZAjhQABf1I7UtHusEJl+ARl4Rr57nVna6MW70G81viISLcYbdnvFBShHWxyWttr3hYfNaPErK5CUQIDAQAB",
     "name" : "Reveal: Instantly Understand Privacy Policies",
     "description" : "Use AI to quickly summarize privacy policies. Extract from any webpage or paste your own for an easy-to-understand summary.",
-    "version" : "1.0.1",
+    "version" : "1.0.2",
     "icons": {
         
             "16": "./src/assets/images/icon16(light).png",
