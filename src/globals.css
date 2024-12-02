@@ -214,6 +214,7 @@ header nav{
     -ms-transition:left .5s ease-in-out, opacity .4s ease-in-out;
     -o-transition:left .5s ease-in-out, opacity .4s ease-in-out;
     opacity: 0;
+    z-index: 2;
 }
 
 header nav.open{
